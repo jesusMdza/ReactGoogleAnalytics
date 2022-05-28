@@ -1,0 +1,6 @@
+.signup-button:hover,
+.login-button:hover,
+.secondary-button:focus
+input {
+  background-color: transparent;
+}
