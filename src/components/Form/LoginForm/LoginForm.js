@@ -1,14 +1,15 @@
 import './LoginForm.css';
 import { useState, useEffect, useContext } from 'react';
+import { Link } from 'react-router-dom';
 import { Box, Typography, TextField, Button, Stack, Checkbox, FormControlLabel } from '@mui/material';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
-import Context from '../../../context/Context';
+import FirebaseContext from '../../../context/FirebaseContext';
 
 // TODO: set up state change with textfields MUI
 
 const LoginForm = () => {
-  const firebaseApp = useContext(Context);
+  const firebaseApp = useContext(FirebaseContext);
   const [values, setValues] = useState({
     email: '',
     password: ''
@@ -48,16 +49,18 @@ const LoginForm = () => {
       <Typography sx={{ marginBottom: '0.1em', textAlign: 'left', fontSize: '4em' }} variant="h4">Welcome back</Typography>
       <Stack sx={{ alignItems: 'flex-end', marginBottom: '1em' }} direction="row">
         <Typography sx={{ marginRight: '.2em' }} variant="h6">New here?</Typography>
-        <Button 
-          className="some-button"
-          sx={{ 
-            textTransform: 'unset', 
-            padding: 0, 
-            margin: 0, 
-            letterSpacing: 0
-            }}>
-              Sign Up
-        </Button>
+        <Link to="/signup">
+          <Button
+            className="some-button"
+            sx={{ 
+              textTransform: 'unset', 
+              padding: 0, 
+              margin: 0, 
+              letterSpacing: 0
+              }}>
+                Sign Up
+          </Button>
+        </Link>
       </Stack>
 
       <TextField 
@@ -152,7 +155,6 @@ const LoginForm = () => {
             Log In with Google
         </Button>
       </Stack>
-
     </>
   );
 }

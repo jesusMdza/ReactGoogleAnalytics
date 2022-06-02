@@ -2,10 +2,10 @@ import { useState, useContext } from 'react';
 import { Typography, TextField, Button } from '@mui/material';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 
-import Context from '../../../context/Context';
+import FirebaseContext from '../../../context/FirebaseContext';
 
 const SignUpForm = () => {
-  const firebaseApp = useContext(Context);
+  const firebaseApp = useContext(FirebaseContext);
   const [values, setValues] = useState({
     firstName: '',
     lastName: '',
