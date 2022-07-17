@@ -1,19 +1,23 @@
 import './LoginForm.css';
 import { useState, useEffect, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Box, Typography, TextField, Button, Stack, Checkbox, FormControlLabel } from '@mui/material';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
 import FirebaseContext from '../../../context/FirebaseContext';
+import AuthContext from '../../../context/AuthContext';
 
 // TODO: set up state change with textfields MUI
 
 const LoginForm = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const firebaseApp = useContext(FirebaseContext);
-  const [values, setValues] = useState({
-    email: '',
-    password: ''
-  });
+  const authContext = useContext(AuthContext.context);
+  const [errors, setErrors] = useState([]);
+  const [values, setValues] = useState({ email: null, password: null });
+
+  const from = location.state?.from?.pathname || "/";
   
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -28,25 +32,25 @@ const LoginForm = () => {
     const { email, password  } = values;
     const auth = getAuth();
 
-    // signInWithEmailAndPassword(auth, email, password)
-    //   .then(( credential ) => {
-    //     // Signed in
-    //     const user = credential.user
-    //     console.log('this is the signed in user');
-    //     console.log(user);
-    //   })
-    //   .catch((error) => {
-    //     const errorCode = error.code;
-    //     const errorMessage = error.message;
+    signInWithEmailAndPassword(auth, email, password)
+      .then(( credential ) => {
+        setErrors([]);
 
-    //     console.log('errorCode', errorCode);
-    //     console.log('error', errorMessage);
-    //   });
+        // set user
+        const user = credential.user
+        authContext.user = user;
+
+        // navigate user back to where they came from
+        navigate(from, { replace: true });
+      })
+      .catch((error) => {
+        setErrors([error.message]);
+      });
   }
 
   return (
     <>
-      <Typography sx={{ marginBottom: '0.1em', textAlign: 'left', fontSize: '4em' }} variant="h4">Welcome back</Typography>
+      <Typography sx={{ marginBottom: '0.1em', textAlign: 'left', fontSize: '4em', fontWeight: 'bold' }} variant="h4">Welcome back</Typography>
       <Stack sx={{ alignItems: 'flex-end', marginBottom: '1em' }} direction="row">
         <Typography sx={{ marginRight: '.2em' }} variant="h6">New here?</Typography>
         <Link to="/signup">
@@ -62,16 +66,18 @@ const LoginForm = () => {
           </Button>
         </Link>
       </Stack>
-
-      <TextField 
-        sx={{ marginBottom: '1em', background: 'none' }} 
+      
+      <TextField
+        error={ errors.length > 0 ? true : false }
+        sx={{ marginBottom: '1em', background: 'none', }} 
         id="outlined-basic" 
         label="Email" 
         name="email"
         variant="filled"
         onChange={handleChange}
+        helperText={errors.length > 0 ? "Invalid login. Please try again." : ""}
       />
-      <TextField 
+      <TextField
         sx={{ marginBottom: '1em' }} 
         id="outlined-basic" 
         label="Password" 

@@ -36,23 +36,27 @@ const RequireAuth = ({ children }) => {
 
 const App = () => {
   return (
-    <Container 
-      sx={{ 
-        display: 'flex', 
-        justifyContent: 'center' ,
-        paddingTop: '10em'
-      }}>
-      <Routes>
-        <Route path="/signup" element={<Form type="signup" />}></Route>
-        <Route path="/login" element={<Form type="login" />}></Route>
-        <Route path="/" element={
-          <RequireAuth>
-            <Home />
-          </RequireAuth>
-        }>
-        </Route>
-      </Routes>
-    </Container>
+    <FirebaseContext.provider>
+      <AuthContext.provider>
+        <Container 
+          sx={{ 
+            display: 'flex', 
+            justifyContent: 'center' ,
+            paddingTop: '10em'
+          }}>
+          <Routes>
+            <Route path="/signup" element={<Form type="signup" />}></Route>
+            <Route path="/login" element={<Form type="login" />}></Route>
+            <Route path="/" element={
+              <RequireAuth>
+                <Home />
+              </RequireAuth>
+            }>
+            </Route>
+          </Routes>
+        </Container>
+      </AuthContext.provider>
+    </FirebaseContext.provider>
   );
 }
 
